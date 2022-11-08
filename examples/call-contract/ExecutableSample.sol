@@ -10,6 +10,7 @@ import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interf
 contract ExecutableSample is AxelarExecutable {
     string public value;
     string public description;
+    address public recipient;
     string public sourceChain;
     string public sourceAddress;
     IAxelarGasService public immutable gasReceiver;
@@ -25,7 +26,7 @@ contract ExecutableSample is AxelarExecutable {
         string calldata value_,
         string calldata description_
     ) external payable {
-        bytes memory payload = abi.encode(value_, description_);
+        bytes memory payload = abi.encode(value_, description_, destinationAddress);
         if (msg.value > 0) {
             gasReceiver.payNativeGasForContractCall{ value: msg.value }(
                 address(this),
@@ -44,7 +45,7 @@ contract ExecutableSample is AxelarExecutable {
         string calldata sourceAddress_,
         bytes calldata payload_
     ) internal override {
-        (value, description) = abi.decode(payload_, (string, string));
+        (value, description, recipient) = abi.decode(payload_, (string, string, address));
         sourceChain = sourceChain_;
         sourceAddress = sourceAddress_;
     }

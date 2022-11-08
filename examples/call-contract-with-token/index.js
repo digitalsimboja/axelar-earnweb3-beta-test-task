@@ -48,7 +48,7 @@ async function test(chains, wallet, options) {
     }
 
     async function logReason(){
-        console.log(`Payment information at ${destination.name} is "${await destination.contract.description()}"`);
+        console.log(`Payment information at ${destination.name} is:  "${await destination.contract.description()}"`);
     }
 
     console.log('--- Initially ---');

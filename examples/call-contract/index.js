@@ -36,7 +36,7 @@ async function test(chains, wallet, options) {
 
     async function logValue() {
         console.log(`value at ${destination.name} is "${await destination.contract.value()}"`);
-        console.log(`Payment information at ${destination.name} is "${await destination.contract.description()}"`);
+        console.log(`Payment information at ${destination.name} is: "${await destination.contract.description()}"`);
     }
 
     console.log('--- Initially ---');
