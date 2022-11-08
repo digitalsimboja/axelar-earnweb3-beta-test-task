@@ -9,6 +9,7 @@ import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interf
 
 contract ExecutableSample is AxelarExecutable {
     string public value;
+    string public description;
     string public sourceChain;
     string public sourceAddress;
     IAxelarGasService public immutable gasReceiver;
@@ -21,9 +22,10 @@ contract ExecutableSample is AxelarExecutable {
     function setRemoteValue(
         string calldata destinationChain,
         string calldata destinationAddress,
-        string calldata value_
+        string calldata value_,
+        string calldata description_
     ) external payable {
-        bytes memory payload = abi.encode(value_);
+        bytes memory payload = abi.encode(value_, description_);
         if (msg.value > 0) {
             gasReceiver.payNativeGasForContractCall{ value: msg.value }(
                 address(this),
@@ -42,7 +44,7 @@ contract ExecutableSample is AxelarExecutable {
         string calldata sourceAddress_,
         bytes calldata payload_
     ) internal override {
-        (value) = abi.decode(payload_, (string));
+        (value, description) = abi.decode(payload_, (string, string));
         sourceChain = sourceChain_;
         sourceAddress = sourceAddress_;
     }

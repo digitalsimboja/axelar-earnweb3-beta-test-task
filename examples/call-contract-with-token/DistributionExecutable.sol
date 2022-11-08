@@ -8,6 +8,7 @@ import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contr
 
 contract DistributionExecutable is AxelarExecutable {
     IAxelarGasService public immutable gasReceiver;
+    string public paymentInformation;
 
     constructor(address gateway_, address gasReceiver_) AxelarExecutable(gateway_) {
         gasReceiver = IAxelarGasService(gasReceiver_);
@@ -18,7 +19,8 @@ contract DistributionExecutable is AxelarExecutable {
         string memory destinationAddress,
         address[] calldata destinationAddresses,
         string memory symbol,
-        uint256 amount
+        uint256 amount,
+        string calldata paymentInformation_
     ) external payable {
         address tokenAddress = gateway.tokenAddresses(symbol);
         IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount);
