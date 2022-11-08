@@ -46,18 +46,18 @@ node scripts/test examples/call-contract [local|testnet] ${"source-chain"} ${"de
 #### Example
 
 ```bash
-node scripts/deploy examples/call-contract local
-node scripts/test examples/call-contract local "Moonbeam" "Avalanche" 'Hello World' "Sending you greetings"
+node scripts/deploy examples/call-contract testnet
+node scripts/test examples/call-contract testnet "Fantom" "Polygon" 'Hello World' "Sending you greetings ahead of Christmas"
 ```
 
 Output:
 
 ```
 --- Initially ---
-value at Avalanche is
+value at Polygon is
 --- After ---
-value at Avalanche is Hello World
-Payment information at Avalanche is Sending you greetings
+value at Polygon is Hello World
+Payment information at Avalanche is Sending you greetings ahead of Christmas
 ```
 
 ### Call contract with token
@@ -79,8 +79,8 @@ node scripts/test examples/call-contract-with-token [local|testnet] ${"source-ch
 #### Example
 
 ```bash
-node scripts/deploy examples/call-contract-with-token local
-node scripts/test examples/call-contract-with-token local "Moonbeam" "Ethereum" 100 "Here is payment for upkeep" 0xBa86A5719722B02a5D5e388999C25f3333c7A9fb
+node scripts/deploy examples/call-contract-with-token testnet
+node scripts/test examples/call-contract-with-token testnet "Fantom" "Polygon" 10 "Here is payment for upkeep" 0xBa86A5719722B02a5D5e388999C25f3333c7A9fb
 ```
 
 Output:
@@ -88,11 +88,11 @@ Output:
 ```
 --- Initially ---
 0xBa86A5719722B02a5D5e388999C25f3333c7A9fb has 100 aUSDC
-Payment information at Ethereum ""
+Payment information at Polygon ""
 
 --- After ---
 0xBa86A5719722B02a5D5e388999C25f3333c7A9fb has 199 aUSDC
-Payment information at Ethereum is:  Here is payment for upkeep
+Payment information at Polygon is:  Here is payment for upkeep
 ```
 
 ### How I did it
@@ -101,4 +101,4 @@ Here are the modifications I added:
 
 -   Added `description` storage variable to hold the payment information/reason for each transaction
 -   Encoded the `description` received from the contract caller alongside the message value for the `call-contract` contract and alongside `destinationAddresses` for the `call-contract-with-token` which form the payload
--   Decoded the encoded `description` on the `_execute` function call body which is then stored within the contract alongside the message recipent(s)
+-   Decoded the encoded `description` and `recipient(s)` values on the `_execute` function call body which is then stored within the contract alongside the message recipent(s)
