@@ -8,7 +8,8 @@ import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contr
 
 contract DistributionExecutable is AxelarExecutable {
     IAxelarGasService public immutable gasReceiver;
-    string public paymentInformation;
+    string public description;
+    address[] public recipients;
 
     constructor(address gateway_, address gasReceiver_) AxelarExecutable(gateway_) {
         gasReceiver = IAxelarGasService(gasReceiver_);
@@ -20,12 +21,12 @@ contract DistributionExecutable is AxelarExecutable {
         address[] calldata destinationAddresses,
         string memory symbol,
         uint256 amount,
-        string calldata paymentInformation_
+        string calldata description_
     ) external payable {
         address tokenAddress = gateway.tokenAddresses(symbol);
         IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount);
         IERC20(tokenAddress).approve(address(gateway), amount);
-        bytes memory payload = abi.encode(destinationAddresses);
+        bytes memory payload = abi.encode(description_, destinationAddresses);
         if (msg.value > 0) {
             gasReceiver.payNativeGasForContractCallWithToken{ value: msg.value }(
                 address(this),
@@ -47,7 +48,7 @@ contract DistributionExecutable is AxelarExecutable {
         string calldata tokenSymbol,
         uint256 amount
     ) internal override {
-        address[] memory recipients = abi.decode(payload, (address[]));
+        (description, recipients) = abi.decode(payload, (string, address[]));
         address tokenAddress = gateway.tokenAddresses(tokenSymbol);
 
         uint256 sentAmount = amount / recipients.length;

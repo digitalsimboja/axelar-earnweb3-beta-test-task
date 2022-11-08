@@ -32,9 +32,11 @@ async function test(chains, wallet, options) {
     const source = chains.find((chain) => chain.name === (args[0] || 'Avalanche'));
     const destination = chains.find((chain) => chain.name === (args[1] || 'Fantom'));
     const message = args[2] || `Hello ${destination.name} from ${source.name}, it is ${new Date().toLocaleTimeString()}.`;
+    const reason = args[3] || `Hello ${destination.name} from ${source.name}, I am sending you this payment to wish you Happy Christmas Celebration in advance`;
 
     async function logValue() {
         console.log(`value at ${destination.name} is "${await destination.contract.value()}"`);
+        console.log(`Payment information at ${destination.name} is "${await destination.contract.description()}"`);
     }
 
     console.log('--- Initially ---');
@@ -44,12 +46,16 @@ async function test(chains, wallet, options) {
     const gasLimit = 3e5;
     const gasPrice = await getGasPrice(source, destination, AddressZero);
 
-    const tx = await source.contract.setRemoteValue(destination.name, destination.executableSample, message, {
+    const tx = await source.contract.setRemoteValue(destination.name, destination.executableSample, message, reason, {
         value: BigInt(Math.floor(gasLimit * gasPrice)),
     });
     await tx.wait();
 
     while ((await destination.contract.value()) !== message) {
+        await sleep(2000);
+    }
+
+    while ((await destination.contract.description()) !== reason) {
         await sleep(2000);
     }
 
