@@ -102,3 +102,5 @@ Here are the modifications I added:
 -   Added `description` storage variable to hold the payment information/reason for each transaction
 -   Encoded the `description` received from the contract caller alongside the message value for the `call-contract` contract and alongside `destinationAddresses` for the `call-contract-with-token` which form the payload
 -   Decoded the encoded `description` and `recipient(s)` values on the `_execute` function call body which is then stored within the contract alongside the message recipent(s)
+- Updated the scripts to receive and validate the description passed as arguments and stored in a **reason** variable
+- Printed the description as reason for the payment on the console
